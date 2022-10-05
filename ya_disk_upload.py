@@ -63,15 +63,13 @@ class YaUploader:
             else:
                 print('Something goes wrong!')
 
-    def get_file_list(self, path):
+    @staticmethod
+    def get_file_list(path):
         file_list = []
         if os.path.isfile(path):
             return path
         else:
-            try:
-                folder_entry_list = os.listdir(path)
-            except FileNotFoundError:
-                return -1
+            folder_entry_list = os.listdir(path)
             for entry in folder_entry_list:
                 folder_entry_path = os.path.join(path, entry)
                 if os.path.isfile(folder_entry_path):
@@ -80,11 +78,6 @@ class YaUploader:
 
     def uploader(self, path, move):
         param = self.get_file_list(path)
-        if param in [None, []]:
-            print('Nothing to send.')
-        elif param == -1:
-            print('Error! Wrong path.')
-            return
         if type(param) is list:
             for file in param:
                 print(f'Uploading "{os.path.basename(file)}"')
@@ -97,8 +90,17 @@ class YaUploader:
 def main():
     a = YaUploader()
     input_path = input('Enter path to a file or folder with files you want to upload to YaDisk (eg: "c:/hiberfil.sys" '
-                       'or "c:/windows/") or leave path empty to use project folder:\n')
-    path = f'{os.getcwd()}' if input_path == '' else input_path
+                       'or "c:/windows/") or leave path empty to use project folder "YaUpload":\n')
+    path = f'{os.getcwd()}/YaUpload' if input_path == '' else input_path
+    try:
+        if os.listdir(path) in ['None', []]:
+            print('Folder is empty!')
+            return
+    except FileNotFoundError:
+        print('Error. File or folder not found!')
+        return
+    except NotADirectoryError:
+        pass
     move = input('Move uploaded files to Uploaded folder? y/n\n')
     if move == 'y':
         a.uploader(path, 1)
@@ -106,6 +108,7 @@ def main():
         a.uploader(path, 0)
     else:
         print('Wrong command, aborting.')
+        return
 
 
 main()
