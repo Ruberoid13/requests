@@ -89,13 +89,13 @@ class YaUploader:
 
 def main():
     a = YaUploader()
-    input_path = input('Enter path to a file or folder with files you want to upload to YaDisk (eg: "c:/hiberfil.sys" '
+    input_path = input('\nEnter path to a file or folder with files you want to upload to YaDisk (eg: "c:/hiberfil.sys"\n'
                        'or "c:/windows/") or leave path empty to use project folder "YaUpload":\n')
     if input_path == '':
         try:
             os.mkdir('YaUpload')
             print('Folder "YaUpload" was not found. But dont worry, we have created it! '
-                  'Now put some files here and restart script')
+                  'Now put some files here and restart script.')
         except FileExistsError:
             pass
     path = f'{os.getcwd()}/YaUpload' if input_path == '' else input_path
