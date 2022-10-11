@@ -34,7 +34,7 @@ params = {'order': 'desc',
 # jsoned = r.json()
 # print(jsoned)
 # print('====================')
-
+counter = 1
 while True:
     params = {'order': 'desc',
               # 'min': time,
@@ -51,8 +51,8 @@ while True:
 
         jsoned = r.json()
         print(jsoned)
-        counter = 1
-        print(f'=======PAGE: {page}')
+        # counter = 1
+        print(f'        PAGE: {page}')
         for i in jsoned['items']:
             # if 'python' in i['tags']:
                 # print(i)
@@ -61,12 +61,10 @@ while True:
             # print(f"    {i['link']}")
             counter += 1
         if jsoned['has_more'] == True:
-            print(jsoned['has_more'])
             page += 1
 
         else:
-            print(jsoned['has_more'])
-            print('Has No More!!!!!!!!!!!')
+            print('No more pages')
             break
     else:
         print('BORODA!!!!!!')
