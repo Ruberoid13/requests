@@ -1,73 +1,40 @@
-from datetime import datetime, date, time
+from datetime import datetime, date
 import requests
 
 dt_now = datetime.now()
-
-print(f'Current date and time: {dt_now}')
-time = int(datetime.timestamp(dt_now))
-time = time - time % 86400
-print(time)
-print(f'Current date and time in seconds from 01.01.1970: {time}')
-time = time - 86400 * 2 - 10800
-print('====================')
-print(datetime.fromtimestamp(time))
-print('====================')
-
-
-
+time = int(datetime.timestamp(dt_now)) - int(datetime.timestamp(dt_now)) % 86400 - 10800
 url = 'https://api.stackexchange.com//2.3/questions'
 page = 1
 headers = {}
-params = {'order': 'desc',
-          # 'min': time,
-          'sort': 'activity',
-          'site': 'stackoverflow',
-          'tagged': 'python',
-          # 'creation_date': time,
-          'fromdate': time,
-          'todate': time + 86400,
-          'pagesize': 100,
-          'page': page}
-# r = requests.get(url=url, params=params, headers=headers)
-# print(f'Status code: {r.status_code}')
-# print('====================')
-# jsoned = r.json()
-# print(jsoned)
-# print('====================')
 counter = 1
+print('====================')
+print(f'List of posts created in last two days from: '
+      f'{date.fromtimestamp(time - 86400 * 2)} to {date.fromtimestamp(time)}:')
 while True:
-    params = {'order': 'desc',
-              # 'min': time,
-              'sort': 'activity',
+    params = {
               'site': 'stackoverflow',
               'tagged': 'python',
-              # 'creation_date': time,
-              'fromdate': time,
-              'todate': time + 86400,
+              'fromdate': time - 86400 * 2,
+              'todate': time,
               'pagesize': 100,
-              'page': page}
+              'page': page
+            }
     r = requests.get(url=url, params=params, headers=headers)
     if r.status_code == 200:
-
         jsoned = r.json()
-        print(jsoned)
-        # counter = 1
-        print(f'        PAGE: {page}')
+        print(f'====================\nPAGE: {page}\n====================')
         for i in jsoned['items']:
-            # if 'python' in i['tags']:
-                # print(i)
             print(f"{counter}: {i['title']}:")
-            # print(f"    {datetime.fromtimestamp(i['creation_date'])}")
-            # print(f"    {i['link']}")
+            print(f"    {datetime.fromtimestamp(i['creation_date'])}")
+            print(f"    {i['link']}")
             counter += 1
         if jsoned['has_more'] == True:
             page += 1
-
         else:
-            print('No more pages')
+            print(f'====================\nEnd of list\n====================')
             break
     else:
-        print('BORODA!!!!!!')
+        print('Something goes wrong!')
         print(r.status_code)
         print(r.text)
         break
